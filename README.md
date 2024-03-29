@@ -39,12 +39,14 @@ Example of augmented images
 ## Model features
 ### Performance
     - Number of parameters: 197,152
-    - Train set accuracy:
-    - Test set Accuracy:
-    - Number of Epochs:
-    - Total Receptive field:
+    - Train set accuracy: 80.48%
+    - Test set Accuracy: 87.1%
+    - Number of Epochs: 100
+    - Total Receptive field: 
 
-Train and test loss and accuracy curve do not suggest any overfitting
+Train and test loss and accuracy curve do not suggest any overfitting  
+![image](https://github.com/sayanbanerjee32/TASI_ERAv2_S9/assets/11560595/2da4f5b7-e4f2-4560-9c6c-7f2d48366534)
+
     
 ### Use of Stride 2 colvolution
 
