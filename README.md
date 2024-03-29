@@ -31,28 +31,45 @@ Following modules of albumentations library is used for image augmentations
     - image is shifted horizontally and vertically in the range of -0.0625, 0.0625 of hight and width
     - image is scaled in the range of 0.9, 1.1 times of the original size
     - Image is rotated within -45 degrees and 45 degrees
+3. CoarseDropout - This is applied on all the images. However, as the image if first padded to 64x64 and then a hole 16x16 is created and then centre crop of 32x32 is applied dropout will not be available for all the images. The below set of picture proves the same.
 
 Example of augmented images  
 ![image](https://github.com/sayanbanerjee32/TASI_ERAv2_S9/assets/11560595/f6f30a39-abdd-4abc-9475-a666726deb32)
 
 
 ## Model features
+[Final notebook is available here](https://github.com/sayanbanerjee32/TASI_ERAv2_S9/blob/main/S9_stride2_dilated_SayanBanerjee.ipynb) 
 ### Performance
     - Number of parameters: 197,152
-    - Train set accuracy: 80.48%
-    - Test set Accuracy: 87.1%
-    - Number of Epochs: 100
+    - Train set accuracy: 84% (100 epochs) - 79% at 41 epochs
+    - Test set Accuracy: 88% (100 epochs) - 85% at 41 epochs
     - Total Receptive field: 
 
-Train and test loss and accuracy curve do not suggest any overfitting  
-![image](https://github.com/sayanbanerjee32/TASI_ERAv2_S9/assets/11560595/2da4f5b7-e4f2-4560-9c6c-7f2d48366534)
+Train and test loss and accuracy curve do not suggest any overfitting.  
+![image](https://github.com/sayanbanerjee32/TASI_ERAv2_S9/assets/11560595/2b91da7e-e35d-482b-8725-7ace3e873a73)
 
     
-### Use of Stride 2 colvolution
+### Use of Stride 2 Convolution
+Stride 2 convolution is used for pooling after 1st convolution block.
 
 ### Use of Depthwise Separable Convolution
+Depthwise separable convolutions are used in each convolution layer inside Convolution block 3 and Convolution block 4
 
 ### Use of Dilated Convolution
+Dilated convolution is used for pooling after Convolution block 2 and Convolution block 3
     
 ### Error analysis
+
+There are total 1190 wrong classifications out of 10,000 test images. Top 5 confused cases of prediction
+|target|prediction|number of images|
+|------|----------|----------------|
+|dog|cat|137|
+|cat|dog|71|
+|bird|deer|45|
+|cat|bird|44|
+|frog|cat|41|  
+  
+Example of 9 misclassified images in descending order of loss.  
+![image](https://github.com/sayanbanerjee32/TASI_ERAv2_S9/assets/11560595/8bc6a0bb-d6d5-4f42-8988-65dae492d22a)
+
 
