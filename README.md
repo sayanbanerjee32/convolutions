@@ -25,14 +25,26 @@ Example images from training set
 ![image](https://github.com/sayanbanerjee32/TSAI_ERAv2_S8/assets/11560595/711aed42-d235-45f3-b7e1-729fbb8a01fe)
 
 ## Augmentation Strategies
+Following modules of albumentations library is used for image augmentations
+1. HorizontalFlip - this flips half of the images horizontally
+2. ShiftScaleRotate - this is also applied on half of the images where
+    - image is shifted horizontally and vertically in the range of -0.0625, 0.0625 of hight and width
+    - image is scaled in the range of 0.9, 1.1 times of the original size
+    - Image is rotated within -45 degrees and 45 degrees
+
+Example of augmented images  
+![image](https://github.com/sayanbanerjee32/TASI_ERAv2_S9/assets/11560595/f6f30a39-abdd-4abc-9475-a666726deb32)
+
 
 ## Model features
 ### Performance
-    - Number of parameters:
+    - Number of parameters: 197,152
     - Train set accuracy:
     - Test set Accuracy:
     - Number of Epochs:
     - Total Receptive field:
+
+Train and test loss and accuracy curve do not suggest any overfitting
     
 ### Use of Stride 2 colvolution
 
@@ -40,5 +52,5 @@ Example images from training set
 
 ### Use of Dilated Convolution
     
-    
+### Error analysis
 
