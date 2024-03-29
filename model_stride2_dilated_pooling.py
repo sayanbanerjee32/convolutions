@@ -25,7 +25,7 @@ class Net(nn.Module):
             nn.ReLU(),
             nn.BatchNorm2d(32),
             nn.Dropout(dropout_value)
-        ) #input size: 32 x 32 x 32, output size: 32 x 32 x 64, receptive field: 3 + (3-1) * 1 = 5
+        ) #input size: 32 x 32 x 32, output size: 32 x 32 x 32, receptive field: 3 + (3-1) * 1 = 5
 
         ## Strided convolution
         self.SC1 = nn.Sequential(
@@ -34,8 +34,8 @@ class Net(nn.Module):
             nn.ReLU(),
             nn.BatchNorm2d(32),
             nn.Dropout(dropout_value)
-        ) #input size: 32 x 32 x n*2, output size: 24 x 24 x n*4, receptive field: 3 + (3-1) * 1 = 5
-        #Lout =  (Lin + 2 * padding - dilation * (kernel - 1) - 1) / stride + 1
+        ) #input size: 32 x 32 x 32, output size: 16 x 16 x 32, receptive field: 5 + (3-1) * 1 = 7
+        #Lout =  ((Lin + 2 * padding - dilation * (kernel - 1) - 1)) / stride + 1
         # ((32 + 2 * 1 - 1 * (3 - 1) -1) / 2) + 1 = 16
 
         # # TRANSITION BLOCK 1 - no transition block
@@ -47,7 +47,7 @@ class Net(nn.Module):
             nn.ReLU(),
             nn.BatchNorm2d(64),
             nn.Dropout(dropout_value)
-        ) #input size: 16 x 16 x n, output size: 16 x 16 x n*2, receptive field: 6 + (3-1) * 2 = 10
+        ) #input size: 16 x 16 x 32, output size: 16 x 16 x 64, receptive field: 7 + (3-1) * 2 = 11
 
         self.C4 = nn.Sequential(
             nn.Conv2d(in_channels=64, out_channels=64,
@@ -55,7 +55,7 @@ class Net(nn.Module):
             nn.ReLU(),
             nn.BatchNorm2d(64),
             nn.Dropout(dropout_value)
-        ) #input size: 16 x 16 x n*2, output size: 16 x 16 x n*4, receptive field: 10 + (3-1) * 2 = 14
+        ) #input size: 16 x 16 x 64, output size: 16 x 16 x 64, receptive field: 11 + (3-1) * 2 = 15
 
         self.C4_1 = nn.Sequential(
             nn.Conv2d(in_channels=64, out_channels=64,
@@ -63,7 +63,7 @@ class Net(nn.Module):
             nn.ReLU(),
             nn.BatchNorm2d(64),
             nn.Dropout(dropout_value)
-        ) #input size: 16 x 16 x n*2, output size: 16 x 16 x n*4, receptive field: 10 + (3-1) * 2 = 14
+        ) #input size: 16 x 16 x 64, output size: 16 x 16 x 64, receptive field: 15 + (3-1) * 2 = 19
       
         ## dilated pooling
         self.SC2 = nn.Sequential(
@@ -72,8 +72,9 @@ class Net(nn.Module):
             nn.ReLU(),
             nn.BatchNorm2d(64),
             nn.Dropout(dropout_value)
-        ) #input size: 16 x 16 x n*4, output size: 16 x 16 x n*4, receptive field: 14 + (3-1) * 2 = 18
-        # ((18 + 2 * 1 - 4 * (3 - 1) -1) / 1) + 1 = 12
+        ) #input size: 16 x 16 x 64, output size: 8 x 8 x 64, receptive field: 19 + (9-1) * 2 = 35
+        # kernel size for dilated kernel - dilation * (k -1) + 1 = 4 * (3-1) + 1 = 9
+        # out size = ((16 + 2 * 0 - 4 * (3 - 1) -1) / 1) + 1 = 8
         
         # TRANSITION BLOCK 2
         self.t2 = nn.Sequential(
@@ -82,7 +83,7 @@ class Net(nn.Module):
             nn.ReLU(),
             nn.BatchNorm2d(32),
             nn.Dropout(dropout_value)
-        ) #input size: 16 x 16 x n*4, output size: 16 x 16 x n, receptive field: 18 + (1-1)*2 = 18
+        ) #input size: 8 x 8 x 64, output size: 8 x 8 x 32, receptive field: 35 + (1-1)*2 = 35
 
         # CONVOLUTION BLOCK 3
         
@@ -92,7 +93,7 @@ class Net(nn.Module):
             nn.ReLU(),
             nn.BatchNorm2d(64),
             nn.Dropout(dropout_value)
-        ) #input size: 16 x 16 x n, output size: 16 x 16 x n*2, receptive field: 6 + (3-1) * 2 = 10
+        ) #input size: 8 x 8 x 32, output size: 8 x 8 x 64, receptive field: 35 + (3-1) * 2 = 39
 
         self.C6 = nn.Sequential(
             nn.Conv2d(in_channels=64, out_channels=64, groups = 64,
@@ -100,7 +101,7 @@ class Net(nn.Module):
             nn.ReLU(),
             nn.BatchNorm2d(64),
             nn.Dropout(dropout_value)
-        ) #input size: 16 x 16 x n*2, output size: 16 x 16 x n*4, receptive field: 10 + (3-1) * 2 = 14
+        ) #input size: 8 x 8 x 64, output size: 8 x 8 x 64, receptive field: 39 + (3-1) * 2 = 43
 
         self.C7 = nn.Sequential(
             nn.Conv2d(in_channels=64, out_channels=64, groups = 64,
@@ -108,7 +109,7 @@ class Net(nn.Module):
             nn.ReLU(),
             nn.BatchNorm2d(64),
             nn.Dropout(dropout_value)
-        ) #input size: 16 x 16 x n*2, output size: 16 x 16 x n*4, receptive field: 10 + (3-1) * 2 = 14
+        ) #input size: 8 x 8 x 64, output size: 8 x 8 x 64, receptive field: 43 + (3-1) * 2 = 47
 
         ## dilated pooling
         self.SC3 = nn.Sequential(
@@ -117,8 +118,8 @@ class Net(nn.Module):
             nn.ReLU(),
             nn.BatchNorm2d(64),
             nn.Dropout(dropout_value)
-        ) #input size: 16 x 16 x n*4, output size: 16 x 16 x n*4, receptive field: 14 + (3-1) * 2 = 18
-        # ((12 + 2 * 1 - 4 * (3 - 1) -1) / 1) + 1 = 11
+        ) #input size: 8 x 8 x 64, output size: 4 x 4 x 64, receptive field: 47 + (5-1) * 2 = 55
+        # ((8 + 2 * 0 - 2 * (3 - 1) -1) / 1) + 1 = 4
         
         # TRANSITION BLOCK 3
         self.t3 = nn.Sequential(
@@ -127,7 +128,7 @@ class Net(nn.Module):
             nn.ReLU(),
             nn.BatchNorm2d(32),
             nn.Dropout(dropout_value)
-        ) #input size: 16 x 16 x n*4, output size: 16 x 16 x n, receptive field: 18 + (1-1)*2 = 18
+        ) #input size: 4 x 4 x 64, output size: 4 x 4 x 32, receptive field: 55 + (1-1)*2 = 55
 
         # CONVOLUTION BLOCK 4
 
@@ -137,7 +138,7 @@ class Net(nn.Module):
             nn.ReLU(),
             nn.BatchNorm2d(64),
             nn.Dropout(dropout_value)
-        ) #input size: 8 x 8 x n, output size: 8 x 8 x n*2, receptive field: 20 + (3-1) * 4 = 28
+        ) #input size: 4 x 4 x 32, output size: 4 x 4 x 64, receptive field: 55 + (3-1) * 2 = 59
 
         self.C9 = nn.Sequential(
             nn.Conv2d(in_channels=64, out_channels=128, groups = 64,
@@ -145,7 +146,7 @@ class Net(nn.Module):
             nn.ReLU(),
             nn.BatchNorm2d(128),
             nn.Dropout(dropout_value)
-        ) #input size: 8 x 8 x n*2, output size: 8 x 8 x n*4, receptive field: 28 + (3-1) * 4 = 36
+        ) #input size: 4 x 4 x 64, output size: 4 x 4 x 128, receptive field: 59 + (3-1) * 2 = 63
 
         self.C10 = nn.Sequential(
             nn.Conv2d(in_channels=128, out_channels=128, groups = 128,
@@ -153,17 +154,17 @@ class Net(nn.Module):
             nn.ReLU(),
             nn.BatchNorm2d(128),
             nn.Dropout(dropout_value)
-        ) #input size: 8 x 8 x n*4, output size: 8 x 8 x n*4, receptive field: 36 + (3-1) * 4 = 44
+        ) #input size: 4 x 4 x 128, output size: 4 x 4 x 128, receptive field: 63 + (3-1) * 2 = 67
 
         # OUTPUT BLOCK
         self.GAP = nn.Sequential(
             nn.AdaptiveAvgPool2d((1, 1))
-        ) #input size: 8 x 8 x n*4, output size: 1 x 1 x n*4, receptive field: 44
+        ) #input size: 4 x 4 x 128, output size: 1 x 1 x 128, receptive field: 67
 
         self.c11 = nn.Sequential(
             nn.Conv2d(in_channels=128, out_channels=10,
                       kernel_size=(1, 1), padding=0, bias=False),
-        ) #input size: 1 x 1 x n*4, output size: 1 x 1 x 10, receptive field: 44 + (1-1) * 4 =44
+        ) #input size: 1 x 1 x 128, output size: 1 x 1 x 10, receptive field: 67 + (1-1) * 2 =67
 
 
 
