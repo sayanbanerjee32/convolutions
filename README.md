@@ -31,7 +31,7 @@ Following modules of albumentations library is used for image augmentations
     - image is shifted horizontally and vertically in the range of -0.0625, 0.0625 of hight and width
     - image is scaled in the range of 0.9, 1.1 times of the original size
     - Image is rotated within -45 degrees and 45 degrees
-3. CoarseDropout - This is applied on all the images. However, as the image if first padded to 64x64 and then a hole 16x16 is created and then centre crop of 32x32 is applied dropout will not be available for all the images. The below set of picture proves the same.
+3. CoarseDropout - This is applied on all the images. However, as the image if first padded to 64x64 and then a hole 16x16 is created and then centre crop of 32x32 is applied Cut out will not be available for all the images. The below set of picture proves the same.
 
 Example of augmented images  
 ![image](https://github.com/sayanbanerjee32/TASI_ERAv2_S9/assets/11560595/f6f30a39-abdd-4abc-9475-a666726deb32)
